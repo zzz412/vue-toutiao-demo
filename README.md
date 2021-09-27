@@ -1,24 +1,14 @@
-# vue-toutiao
+1. 项目构建： 
++ vue  
++ vuex
++ vue-router
++ sass
++ babel
++ eslint
 
-## Project setup
-```
-npm install
-```
+2. 项目运行：  `yarn serve` || `npm run serve`
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+3. 将项目托管到git（码云）仓库进行版本管理
+执行git命令
++ `git remote add origin https://gitee.com/zzz412/vue-toutiao-demo.git`  将本地仓库连接到远程仓库
++ `git push -u origin`  将本地仓库代码推送到远程仓库  后续只需要执行 `git push`
