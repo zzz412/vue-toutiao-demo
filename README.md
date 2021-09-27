@@ -20,3 +20,20 @@
       +  按需引入  
       +  全部引入  直接导入
       +  CDN引入
+4.4  移动端做适配
+      +  不同设备下的适配  `npm i -S amfe-flexible` || `yarn add amfe-flexible`
+      +  单位改为rem (一款插件将项目中的所有px 转为 rem) postcss-pxtorem
+         `npm i postcss-pxtorem@5.1.1 -D` || `yarn add postcss-pxtorem@5.1.1 -D`
+          postcss.config.js 配置代码
+          ``` js
+            module.exports = {
+                  plugins: {
+                        'postcss-pxtorem': {
+                              // 因为vant 以375宽度作为设计标准
+                              // 判断 如果为vant的文件 则以37.5作为标准 否则 以 75作为标准
+                              rootValue: ({ file }) => file.includes('vant') ? 37.5 : 75,
+                              propList: ['*']
+                        }
+                  }
+            }
+          ```
