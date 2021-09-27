@@ -31,7 +31,7 @@
 +  全部引入  直接导入
 +  CDN引入
 
-### 4.4  移动端做适配
+## 5 移动端做适配
 +  不同设备下的适配  `npm i -S amfe-flexible` || `yarn add amfe-flexible`
       在main.js中引入 即可
 
@@ -51,3 +51,23 @@ postcss.config.js 配置代码
       }
  }
 ```
+
+## 6. 制作字体图标库
+网站： 阿里巴巴图标库 `https://www.iconfont.cn/`
+
+## 7. 封装网络请求模块
+axios  `npm i axios` || `yarn add axios`
+1. 在utils中新建 `request.js` 文件
+2. 封装 `request.js`
+``` js
+// 导入 axios
+import Axios from 'axios'
+
+// 创建axios实例
+const service = Axios.create({
+  baseURL: 'http://toutiao.zeng.pub/v1_0/' // 接口跟路径
+})
+
+export default service
+```
+3. 设置请求跟路径 `http://toutiao.zeng.pub/v1_0/`

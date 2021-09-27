@@ -7,8 +7,22 @@
     <van-button type="danger" color="blue">123</van-button>
     <van-button type="default" block>123</van-button>
     <div class="face"></div>
+    <!-- 使用字体图标 -->
+    <i class="iconfont icon-sousuo" style="color: red;font-size: 100px;"></i>
   </div>
 </template>
+
+<script>
+import { getUserChannels } from '@/api/channels'
+
+export default {
+  mounted () {
+    getUserChannels().then(res => {
+      console.log(res)
+    })
+  }
+}
+</script>
 
 <style lang="scss">
 .face {

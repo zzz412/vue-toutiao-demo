@@ -9,6 +9,9 @@ import 'amfe-flexible'
 import Vant from 'vant'
 import 'vant/lib/index.css'
 
+// 导入字体图标
+import './fonts/iconfont.css'
+
 Vue.config.productionTip = false
 Vue.use(Vant)
 
