@@ -1,32 +1,13 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <!-- 所有vant组件 都是以  van开头 -->
+    <van-button type="primary" plain>按钮1</van-button>
+    <van-button type="info" round size="mini">按钮2</van-button>
+    <van-button type="warning" icon="plus">123</van-button>
+    <van-button type="danger">123</van-button>
+    <van-button type="default">123</van-button>
   </div>
 </template>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
 </style>
