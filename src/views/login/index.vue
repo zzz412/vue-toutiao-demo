@@ -29,7 +29,7 @@
 
 <script>
 import { login } from '@/api/user'
-import { setToken } from '@/utils/stroage'
+import { setToken } from '@/utils/storage'
 
 export default {
   name: 'login',

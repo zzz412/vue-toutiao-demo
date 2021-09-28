@@ -250,3 +250,58 @@ export function login (data) {
   })
 }
 ```
+
+6. 设置响应拦截器
+utils/request.js
+``` js
+// 定义统一响应拦截器
+service.interceptors.response.use(
+  // 响应成功
+  res => {
+    // 将响应真正结果返回
+    return res.data.data
+  },
+  // 响应失败
+  err => {
+    // 获取响应失败的信息
+    const res = err.response
+    if (res.status < 500) {
+      // 提示错误内容
+      Toast.fail(res.data.message || '发生错误了')
+    }
+    return Promise.reject(err)
+  }
+)
+```
+
+7. 将token保存在cookie中
+下载 `js-cookie`
+创建 `utils/storage.js`文件
+
+``` js
+import Cookie from 'js-cookie'
+
+// 存Token
+export function setToken (token) {
+  Cookie.set('VUE_TOUTIAO_TOKEN', token, { expires: 7 })
+}
+
+// 取Token
+export function getToken () {
+  return Cookie.get('VUE_TOUTIAO_TOKEN')
+}
+
+// 删Token
+export function removeToken () {
+  Cookie.remove('VUE_TOUTIAO_TOKEN')
+}
+```
+
+登录后保存token
+``` js
+const { token } = await login(form)
+// 将token存到本地中
+setToken(token)
+// 提示内容
+this.$toast.success('登录成功')
+```
