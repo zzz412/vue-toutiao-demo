@@ -107,6 +107,10 @@ export default {
 ```
 
 3. 编写页面结构与样式
+**给index.html 页面设置移动端兼容**
+``` html
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+```
 ``` vue
 <template>
   <div class="login-container">
@@ -179,4 +183,70 @@ export default {
 }
 </style>
 
+```
+
+4. 给输入框添加验证规则
+``` js
+{
+  formRules: { // 验证规则
+    mobile: [
+      { required: true, message: '手机号不能为空' },
+      { pattern: /^1[345789]\d{9}$/, message: '手机号不符合规则' }
+    ],
+    code: [
+      { required: true, message: '验证码不能为空' },
+      { pattern: /^\d{6}$/, message: '验证码不符合规则' }
+    ]
+  }
+}
+```
+对应的输入框添加规则
+``` html
+<van-field :rules="formRules.mobile">
+     <!-- 代码省略 -->
+</van-field>
+<van-field :rules="formRules.code">
+     <!-- 代码省略 -->
+</van-field>
+```
+
+5. 监听表单提交并发送登录
+**设置事件监听和输入框的name值**
+``` html
+<van-form @submit="formSubmit">
+  <van-field name="mobile"></van-field>
+  <van-field name="code"></van-field>
+</van-form>
+```
+
+**添加对应方法**
+``` js
+methods: {
+  async formSubmit (form) {
+    // 发送请求 进行用户登录
+    // 使用try catch 组合 捕获错误信息
+    try { // 放入会出错的代码
+      const res = await login(form)
+      console.log(res)
+    } catch (error) { // 出错时做的代码
+      console.log(error.response)
+      // 提示错误信息
+      this.$toast.fail('登录失败')
+    }
+  }
+}
+```
+
+**login请求封装**
+``` js
+import request from '@/utils/request'
+
+// 用户登录/注册
+export function login (data) {
+  return request({
+    method: 'post',
+    url: 'authorizations',
+    data
+  })
+}
 ```
