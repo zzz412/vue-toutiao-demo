@@ -8,3 +8,11 @@ export function login (data) {
     data
   })
 }
+
+// 发送验证码
+export function sendCode (phone) {
+  return request({
+    method: 'get',
+    url: `sms/codes/${phone}`
+  })
+}

@@ -3,7 +3,7 @@
     <!-- 导航栏 -->
     <van-nav-bar title="登录" class="login-nav-bar" />
     <!-- 表单单元格 -->
-    <van-form @submit="formSubmit">
+    <van-form @submit="formSubmit" ref="formRef">
       <!-- 输入框： lable 文本  left-icon 左侧图标  placeholder 提示文本 -->
        <van-field type="number" maxlength="11" name="mobile" placeholder="请输入手机号" v-model="form.mobile" class="login-field" :rules="formRules.mobile">
          <!-- 自定义输入框的内容  插槽 -->
@@ -16,7 +16,9 @@
           <i class="iconfont icon-yanzhengma"></i>
          </template>
          <template #button>
-           <van-button type="info" class="send-code-btn" size="mini" color="#EDEDED" round>获取验证码</van-button>
+           <!-- 表单中的按钮默认是提交按钮  需要设置为普通按钮 -->
+           <van-button v-if="!countDown" @click="sendCode" native-type="button" type="info" class="send-code-btn" size="mini" color="#EDEDED" round>获取验证码</van-button>
+           <van-count-down v-else :time="60 * 1000" format="ss s" @finish="countDown = false"/>
          </template>
        </van-field>
        <!-- 登录按钮 -->
@@ -28,7 +30,7 @@
 </template>
 
 <script>
-import { login } from '@/api/user'
+import { login, sendCode } from '@/api/user'
 import { setToken } from '@/utils/storage'
 
 export default {
@@ -39,13 +41,14 @@ export default {
       formRules: { // 验证规则
         mobile: [
           { required: true, message: '手机号不能为空' },
-          { pattern: /^1[345789]\d{9}$/, message: '手机号不符合规则' }
+          { pattern: /^1[0345789]\d{9}$/, message: '手机号不符合规则' }
         ],
         code: [
           { required: true, message: '验证码不能为空' },
           { pattern: /^\d{6}$/, message: '验证码不符合规则' }
         ]
-      }
+      },
+      countDown: false // 开启倒计时
     }
   },
   methods: {
@@ -63,9 +66,29 @@ export default {
         const { token } = await login(form)
         // 将token存到本地中
         setToken(token)
+        this.$store.commit('user/SET_TOKEN', token)
         // 提示内容
         this.$toast.success('登录成功')
       } catch (error) {}
+    },
+    // 发送验证码
+    sendCode () {
+      // 1. 验证手机号的有效性
+      this.$refs.formRef.validate('mobile')
+        .then(async flag => { // 验证成功
+          try {
+            // 2. 开启倒计时
+            this.countDown = true
+            // 3. 发送请求
+            await sendCode(this.form.mobile)
+          } catch (error) {
+            // 请求失败 停止倒计时
+            this.countDown = false
+          }
+        })
+        .catch(err => { // 验证失败
+          console.log(err)
+        })
     }
   }
 }

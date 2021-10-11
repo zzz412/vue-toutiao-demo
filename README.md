@@ -305,3 +305,42 @@ setToken(token)
 // 提示内容
 this.$toast.success('登录成功')
 ```
+
+## 9. 验证码处理
+结构处理
+``` html 
+<template #button>
+  <!-- 表单中的按钮默认是提交按钮  需要设置为普通按钮 -->
+  <van-button v-if="!countDown" @click="sendCode" native-type="button" type="info" class="send-code-btn" size="mini" color="#EDEDED" round>获取验证码</van-button>
+  <van-count-down v-else :time="60 * 1000" format="ss s" @finish="countDown = false"/>
+</template>
+```
+
+逻辑处理
+``` js
+data () {
+  return {
+    countDown: false // 开启倒计时
+  }
+}
+
+// 发送验证码
+sendCode () {
+  // 1. 验证手机号的有效性
+  this.$refs.formRef.validate('mobile')
+    .then(async flag => { // 验证成功
+      try {
+        // 2. 开启倒计时
+        this.countDown = true
+        // 3. 发送请求
+        await sendCode(this.form.mobile)
+      } catch (error) {
+        // 请求失败 停止倒计时
+        this.countDown = false
+      }
+    })
+    .catch(err => { // 验证失败
+      console.log(err)
+    })
+}
+```
