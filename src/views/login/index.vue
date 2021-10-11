@@ -30,8 +30,7 @@
 </template>
 
 <script>
-import { login, sendCode } from '@/api/user'
-import { setToken } from '@/utils/storage'
+import { sendCode } from '@/api/user'
 
 export default {
   name: 'login',
@@ -61,15 +60,8 @@ export default {
         duration: 0
       })
       // 发送请求 进行用户登录
-      // 使用try catch 组合 捕获错误信息
-      try { // 放入会出错的代码
-        const { token } = await login(form)
-        // 将token存到本地中
-        setToken(token)
-        this.$store.commit('user/SET_TOKEN', token)
-        // 提示内容
-        this.$toast.success('登录成功')
-      } catch (error) {}
+      await this.$store.dispatch('user/login', form)
+      this.$toast.success('登录成功')
     },
     // 发送验证码
     sendCode () {

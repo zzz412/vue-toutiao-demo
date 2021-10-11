@@ -1,4 +1,5 @@
-import { getToken } from '@/utils/storage'
+import { getToken, setToken } from '@/utils/storage'
+import { login } from '@/api/user'
 
 const defaultState = () => {
   return {
@@ -14,6 +15,15 @@ export default {
       state.token = token
     }
   },
-  actions: {},
+  actions: {
+    async login ({ commit }, info) {
+      try { // 放入会出错的代码
+        const { token } = await login(info)
+        // 将token存到本地中
+        setToken(token)
+        commit('SET_TOKEN', token)
+      } catch (error) {}
+    }
+  },
   getters: {}
 }
