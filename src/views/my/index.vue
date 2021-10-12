@@ -3,8 +3,8 @@
     <!-- 个人信息展示区 -->
     <!-- 登录前 -->
     <div class="header no-login" v-if="!isLogin">
-      <img src="@/assets/mobile.png" alt="">
-      <span>登录 / 注册</span>
+        <img src="@/assets/mobile.png" alt="">
+        <span @click="$router.push('/login')">登录 / 注册</span>
     </div>
     <!-- 登录后 -->
     <div class="header login" v-else>
@@ -57,8 +57,9 @@
     </div>
 
     <!-- 退出登录 -->
+    <!-- 退出登录需要做的事情  ->  清除token, 用户信息 -->
     <div class="logout" v-if="isLogin">
-      <van-cell title="退出登录" title-class="logout-text"/>
+      <van-cell title="退出登录" title-class="logout-text" @click="logout"/>
     </div>
   </div>
 </template>
@@ -70,6 +71,21 @@ export default {
   name: 'my',
   computed: {
     ...mapGetters(['isLogin'])
+  },
+  methods: {
+    logout () {
+      this.$dialog.confirm({
+        message: '你确定要退出吗?'
+      })
+        .then(() => { // 确定
+          // on confirm
+          // 1. 通知vuex中actions
+          this.$store.dispatch('user/logout')
+        })
+        .catch(() => { // 取消
+          // on cancel
+        })
+    }
   }
 }
 </script>

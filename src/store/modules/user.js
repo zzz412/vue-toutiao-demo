@@ -1,4 +1,4 @@
-import { getToken, setToken } from '@/utils/storage'
+import { getToken, setToken, removeToken } from '@/utils/storage'
 import { login } from '@/api/user'
 
 const defaultState = () => {
@@ -23,6 +23,13 @@ export default {
         setToken(token)
         commit('SET_TOKEN', token)
       } catch (error) {}
+    },
+    // 退出登录
+    logout ({ commit }) {
+      // 1. 清除本地的token
+      removeToken()
+      // 2. 清除vuex的token
+      commit('SET_TOKEN', undefined)
     }
   },
   getters: {}

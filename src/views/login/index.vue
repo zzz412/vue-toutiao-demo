@@ -62,6 +62,8 @@ export default {
       // 发送请求 进行用户登录
       await this.$store.dispatch('user/login', form)
       this.$toast.success('登录成功')
+      // 返回上一页
+      this.$router.go(-1)
     },
     // 发送验证码
     sendCode () {

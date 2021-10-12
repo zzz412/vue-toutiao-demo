@@ -1,11 +1,23 @@
 // 导入 axios
 import Axios from 'axios'
 import { Toast } from 'vant'
+import store from '@/store'
 
 // 创建axios实例
 const service = Axios.create({
   baseURL: 'http://toutiao.zeng.pub/v1_0/' // 接口跟路径
 })
+// 定义统一请求拦截器
+service.interceptors.request.use(
+  // 请求成功
+  config => {
+    // 添加用户凭证
+    config.headers.Authorization = 'Bearer ' + store.state.user.token
+    return config
+  },
+  // 请求失败
+  err => Promise.reject(err)
+)
 
 // 定义统一响应拦截器
 service.interceptors.response.use(
