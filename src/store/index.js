@@ -5,11 +5,11 @@ import user from './modules/user'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state: {
-  },
-  mutations: {
-  },
-  actions: {
+  getters: {
+    // 是否登录
+    isLogin: state => {
+      return state.user.token !== undefined
+    }
   },
   modules: {
     user
