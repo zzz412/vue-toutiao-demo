@@ -56,6 +56,7 @@
       <van-cell title="小智同学" is-link/>
     </div>
 
+    <!-- 退出登录 -->
     <div class="logout" v-if="isLogin">
       <van-cell title="退出登录" title-class="logout-text"/>
     </div>
