@@ -10,26 +10,26 @@
     <div class="header login" v-else>
       <!-- 头像 名称 区域 -->
       <div class="info1">
-        <img src="@/assets/logo.png" alt="">
-        <span class="username">某某扣2</span>
+        <img :src="userInfo.photo" alt="">
+        <span class="username">{{userInfo.name}}</span>
         <van-button type="default" class="edit-info-btn" size="mini" round>编辑资料</van-button>
       </div>
       <!-- 资料区域 -->
       <div class="info2">
         <div class="item">
-          <span>12</span>
+          <span>{{userInfo.art_count}}</span>
           <span>头条</span>
         </div>
         <div class="item">
-          <span>12</span>
+          <span>{{userInfo.fans_count}}</span>
           <span>粉丝</span>
         </div>
         <div class="item">
-          <span>12</span>
+          <span>{{userInfo.follow_count}}</span>
           <span>关注</span>
         </div>
         <div class="item">
-          <span>12</span>
+          <span>{{userInfo.like_count}}</span>
           <span>获赞</span>
         </div>
       </div>
@@ -65,12 +65,18 @@
 </template>
 
 <script>
+import { userInfo } from '@/api/user'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'my',
   computed: {
     ...mapGetters(['isLogin'])
+  },
+  data () {
+    return {
+      userInfo: {}
+    }
   },
   methods: {
     logout () {
@@ -85,7 +91,17 @@ export default {
         .catch(() => { // 取消
           // on cancel
         })
+    },
+    // 获取用户信息
+    async getUserInfo () {
+      // 1. 发送请求  获取信息
+      const info = await userInfo()
+      // 2. 将用户信息 存储到data数据里面
+      this.userInfo = info
     }
+  },
+  mounted () {
+    this.getUserInfo()
   }
 }
 </script>

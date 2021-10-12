@@ -16,3 +16,11 @@ export function sendCode (phone) {
     url: `sms/codes/${phone}`
   })
 }
+
+// 获取用户信息
+export function userInfo () {
+  return request({
+    method: 'get',
+    url: 'user'
+  })
+}
