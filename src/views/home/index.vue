@@ -10,7 +10,7 @@
     <van-tabs v-model="activeTab" class="home-tab">
       <!-- 循环渲染 频道列表 -->
        <van-tab :title="channel.name" v-for="channel in channels" :key="channel.id" class="home-tab-item">
-         内容 {{channel.name}}
+         <article-list :channelId="channel.id"></article-list>
         </van-tab>
         <!-- 编辑按钮 -->
         <i slot="nav-right" class="iconfont icon-gengduo"></i>
@@ -20,8 +20,10 @@
 
 <script>
 import { getUserChannels } from '@/api/channels'
+import articleList from './components/article-list.vue'
 
 export default {
+  components: { articleList },
   name: 'home',
   data () {
     return {
@@ -63,6 +65,7 @@ export default {
 }
 .home-tab {
   ::v-deep .van-tabs__wrap {
+    border-bottom: 1px solid #EDEFF3;
     height: 80px;
     .van-tabs__nav {
       padding-bottom: 0;
@@ -93,8 +96,8 @@ export default {
     width: 66px;
     font-size: 40px;
     color: #333333;
-    height: 82px;
-    line-height: 82px;
+    height: 80px;
+    line-height: 80px;
     text-align: center;
     background: rgba(255,255,255, .9);
   }
