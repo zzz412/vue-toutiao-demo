@@ -1,35 +1,55 @@
 <template>
   <div class="article-list-container">
-    <!-- 文章 -->
-    <van-cell class="article-item" v-for="article in articles" :key="article.art_id">
-      <!-- title插槽  标题 -->
-      <!-- van-multi-ellipsis--l2  多行省略文本 -->
-      <div slot="title" class="title van-multi-ellipsis--l2">
-        {{article.title}}
-      </div>
-      <!-- label插槽  多图-->
-      <div slot="label" class="cover-list" v-if="article.cover.type == 3">
-        <van-image
-          v-for="(image, i) in article.cover.images"
-          :key="i"
-          :src="image"
-          class="cover-item"
-        />
-      </div>
-      <!-- label插槽  作者 评论  时间-->
-      <div slot="label" class="info">
-        <span>{{article.aut_name}}</span>
-        <span>{{article.comm_count}} 评论</span>
-        <span>{{article.pubdate}}</span>
-      </div>
-      <!-- default插值 单图 -->
-      <van-image
-        slot="default"
-        v-if="article.cover.type == 1"
-        :src="article.cover.images[0]"
-        class="cover-img"
-      />
-    </van-cell>
+    <!-- 下拉刷新组件
+       v-model  当前状态  true 刷新中  false 未刷新
+       @refresh 下拉刷新触发【会自动将v-model的状态改为true】
+     -->
+    <van-pull-refresh v-model="isPullRefresh" @refresh="refreshLoad">
+      <!-- 列表组件
+          v-model 加载状态 true 加载中 false 加载完毕
+          finished 是否结束  true 结束 false 未结束 【当为true时便不会再触发加载事件（意味没有数据了）】
+          @load  加载事件 【当滑动到底部时会自动触发, 并将v-model改为true  加载完毕时 手动改为false】(页面加载时会触发一次)
+          finished-text 结束时显示的文字
+       -->
+        <van-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="一滴都不剩了！！！"
+          @load="getArticles"
+        >
+        <!-- 文章 -->
+        <van-cell class="article-item" v-for="(article, index) in articles" :key="index">
+          <!-- title插槽  标题 -->
+          <!-- van-multi-ellipsis--l2  多行省略文本 -->
+          <div slot="title" class="title van-multi-ellipsis--l2">
+            {{article.title}}
+          </div>
+          <!-- label插槽  多图-->
+          <div slot="label" class="cover-list" v-if="article.cover.type == 3">
+            <van-image
+              v-for="(image, i) in article.cover.images"
+              :key="i"
+              :src="image"
+              class="cover-item"
+            />
+          </div>
+          <!-- label插槽  作者 评论  时间-->
+          <div slot="label" class="info">
+            <span>{{article.aut_name}}</span>
+            <span>{{article.comm_count}} 评论</span>
+            <!-- dayjs 时间处理库  相对时间（插件） -->
+            <span>{{article.pubdate | relativeTime}}</span>
+          </div>
+          <!-- default插值 单图 -->
+          <van-image
+            slot="default"
+            v-if="article.cover.type == 1"
+            :src="article.cover.images[0]"
+            class="cover-img"
+          />
+        </van-cell>
+       </van-list>
+    </van-pull-refresh>
   </div>
 </template>
 
@@ -47,7 +67,10 @@ export default {
   },
   data () {
     return {
-      articles: []
+      articles: [],
+      isPullRefresh: false, // 是否下拉刷新中
+      loading: false, // 是否上拉加载中
+      finished: false // 是否完成
     }
   },
   methods: {
@@ -55,19 +78,44 @@ export default {
     async getArticles () {
       const res = await articleList({
         channel_id: this.channelId, // 频道ID
+        // 第一次用当前时间戳   后面都用历史时间戳
+        timestamp: this.pre_timestamp ? this.pre_timestamp : new Date().getTime() // 时间戳: 获取最新文章【当前时间戳】 获取上一页文章【历史事件戳（pre_timestamp）】
+      })
+      // 保存历史时间戳
+      this.pre_timestamp = res.pre_timestamp
+      // 将加载的数据 添加到数据列表
+      this.articles.push(...res.results)
+      // 关闭加载状态
+      this.loading = false
+      // 判断是否还有数据
+      if (res.results <= 0) {
+        // 关闭加载
+        this.finished = true
+      }
+    },
+    // 下拉刷新
+    async refreshLoad () {
+      const res = await articleList({
+        channel_id: this.channelId, // 频道ID
+        // 第一次用当前时间戳   后面都用历史时间戳
         timestamp: new Date().getTime() // 时间戳: 获取最新文章【当前时间戳】 获取上一页文章【历史事件戳（pre_timestamp）】
       })
+      // 将加载的数据 添加到数据列表
       this.articles = res.results
+      // 关闭刷新状态
+      this.isPullRefresh = false
+      // 开启加载
+      this.finished = false
     }
-  },
-  mounted () {
-    this.getArticles()
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .article-list-container {
+  // 88 80 98
+  height: calc(100vh - 88px - 80px - 98px);
+  overflow-y: auto;
   .article-item {
     padding-top: 20px;
     padding-bottom: 30px;

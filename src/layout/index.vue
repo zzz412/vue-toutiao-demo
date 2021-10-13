@@ -40,6 +40,7 @@ export default {
   background: #F5F7F9;
 }
 .bottom-bar {
+  height: 98px;
   .iconfont {
     font-size: 40px;
   }

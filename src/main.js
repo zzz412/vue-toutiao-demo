@@ -12,6 +12,9 @@ import 'vant/lib/index.css'
 // 导入全局样式
 import './style/index.scss'
 
+// 导入全局过滤器
+import '@/filters'
+
 Vue.config.productionTip = false
 Vue.use(Vant)
 
