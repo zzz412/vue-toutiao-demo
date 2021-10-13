@@ -23,9 +23,12 @@
         <span>{{article.pubdate}}</span>
       </div>
       <!-- default插值 单图 -->
-      <div slot="default" v-if="article.cover.type == 1">
-        <van-image :src="article.cover.images[0]" class="cover-img"/>
-      </div>
+      <van-image
+        slot="default"
+        v-if="article.cover.type == 1"
+        :src="article.cover.images[0]"
+        class="cover-img"
+      />
     </van-cell>
   </div>
 </template>
@@ -77,10 +80,11 @@ export default {
         flex-direction: column;
         justify-content: space-between;
     }
-    ::v-deep van-cell__value {
+    ::v-deep .van-cell__value {
       flex: unset;
       width: 232px;
       height: 146px;
+      margin-left: 26px;
     }
     .title {
       font-size: 32px;
