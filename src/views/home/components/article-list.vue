@@ -114,7 +114,7 @@ export default {
 <style lang="scss" scoped>
 .article-list-container {
   // 88 80 98
-  height: calc(100vh - 88px - 80px - 98px);
+  height: 80vh;
   overflow-y: auto;
   .article-item {
     padding-top: 20px;

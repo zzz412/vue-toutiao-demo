@@ -13,22 +13,34 @@
          <article-list :channelId="channel.id"></article-list>
         </van-tab>
         <!-- 编辑按钮 -->
-        <i slot="nav-right" class="iconfont icon-gengduo"></i>
+        <i slot="nav-right" class="iconfont icon-gengduo" @click="setChannelPopup = true"></i>
     </van-tabs>
+    <!-- 编辑标签 弹出层 -->
+    <van-popup
+      v-model="setChannelPopup"
+      position="bottom"
+      closeable
+      close-icon-position="top-left"
+      style="height: 100%;"
+    >
+      <channel-edit></channel-edit>
+    </van-popup>
   </div>
 </template>
 
 <script>
 import { getUserChannels } from '@/api/channels'
 import articleList from './components/article-list.vue'
+import ChannelEdit from './components/channel-edit.vue'
 
 export default {
-  components: { articleList },
+  components: { articleList, ChannelEdit },
   name: 'home',
   data () {
     return {
       activeTab: 0,
-      channels: []
+      channels: [],
+      setChannelPopup: false // 自定义频道弹窗
     }
   },
   methods: {
