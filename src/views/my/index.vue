@@ -101,6 +101,7 @@ export default {
     }
   },
   mounted () {
+    // 判断是否登录
     this.getUserInfo()
   }
 }
