@@ -20,7 +20,6 @@ const service = Axios.create({
 service.interceptors.request.use(
   // 请求成功
   config => {
-    console.log('拦截了')
     if (store.state.user.token) {
       // 添加用户凭证
       config.headers.Authorization = 'Bearer ' + store.state.user.token

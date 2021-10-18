@@ -8,3 +8,11 @@ export function getUserChannels () {
     url: 'user/channels'
   })
 }
+
+// 获取全部频道列表
+export function getAllChannels () {
+  return request({
+    method: 'get',
+    url: 'channels'
+  })
+}
