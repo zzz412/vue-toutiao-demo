@@ -16,3 +16,20 @@ export function getAllChannels () {
     url: 'channels'
   })
 }
+
+// 设置用户频道列表
+export function addUserChannels (data) {
+  return request({
+    method: 'patch',
+    url: 'user/channels',
+    data
+  })
+}
+
+// 删除用户频道列表
+export function removeUserChannels (id) {
+  return request({
+    method: 'delete',
+    url: `user/channels/${id}`
+  })
+}

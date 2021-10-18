@@ -11,6 +11,7 @@ import Axios from 'axios'
 import { Toast } from 'vant'
 import store from '@/store'
 import router from '@/router'
+import { setToken } from '@/utils/storage'
 
 // 创建axios实例
 const service = Axios.create({
@@ -66,6 +67,8 @@ service.interceptors.response.use(
             Authorization: 'Bearer ' + rf_token
           }
         })
+        // 存在本地中
+        setToken(token)
         // 将新token重新设置
         store.commit('user/SET_TOKEN', {
           token,

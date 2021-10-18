@@ -23,7 +23,7 @@
       close-icon-position="top-left"
       style="height: 100%;"
     >
-      <channel-edit :myChannels="channels" :active="activeTab"></channel-edit>
+      <channel-edit :myChannels="channels" :active="activeTab" @switchTab="switchTab"></channel-edit>
     </van-popup>
   </div>
 </template>
@@ -47,6 +47,12 @@ export default {
     async getUserChannels () {
       const { channels } = await getUserChannels()
       this.channels = channels
+    },
+    switchTab ({ active, popup = false }) {
+      // 切换频道
+      this.activeTab = active
+      // 关闭弹出层
+      this.setChannelPopup = popup
     }
   },
   mounted () {

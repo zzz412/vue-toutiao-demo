@@ -16,7 +16,7 @@
     </van-cell>
     <!-- 我的频道标签列表 -->
     <van-grid class="my-channel-list" :border="false">
-       <van-grid-item class="my-grid-item" v-for="(channel, index) in myChannels" :key="index">
+       <van-grid-item class="my-grid-item" v-for="(channel, index) in myChannels" :key="index" @click="handlerChannel(index, channel.id)">
          <span slot="text" :style="{ color: active === index ? 'red' : '' }">{{channel.name}}</span>
          <!-- !fixedChannels.includes(channel.id)  当前频道id不在固定频道中出现 -->
          <van-icon name="cross" slot="icon" v-show="isEdit && !fixedChannels.includes(channel.id)"/>
@@ -29,16 +29,16 @@
     </van-cell>
     <!-- 频道推荐标签列表 -->
     <van-grid class="recommend-channel-list" :border="false">
-      <van-grid-item class="recommend-grid-item" v-for="(channels, index) in recommendChannels" :key="index">
+      <van-grid-item class="recommend-grid-item" v-for="(channels, index) in recommendChannels" :key="index" @click="addChannel(channels)">
         <span slot="text">{{channels.name}}</span>
         <van-icon name="plus" slot="icon"/>
       </van-grid-item>
-  </van-grid>
+    </van-grid>
   </div>
 </template>
 
 <script>
-import { getAllChannels } from '@/api/channels'
+import { getAllChannels, addUserChannels, removeUserChannels } from '@/api/channels'
 
 export default {
   name: 'channel-edit',
@@ -84,6 +84,40 @@ export default {
     async getAllChannels () {
       const { channels } = await getAllChannels()
       this.allChannels = channels
+    },
+    // 添加频道
+    async addChannel (item) {
+      // 1. 将当前点击的频道 添加到我的频道中
+      this.myChannels.push(item)
+      // 2. 删除推荐频道中的对应频道【计算属性会自动计算】
+      // 3. 发送请求 将频道添加到服务器中
+      await addUserChannels({
+        channels: [{
+          id: item.id, // 频道的ID
+          seq: this.myChannels.length // 添加的序号
+        }]
+      })
+    },
+    // 点击频道
+    async handlerChannel (index, id) {
+      if (this.isEdit) {
+        // 编辑状态  -> 删除该频道【删除数组中元素】
+        this.myChannels.splice(index, 1)
+        // 如果删除的索引 小于等于 激活的索引 那么将激活索引-1
+        if (index <= this.active) {
+          this.$emit('switchTab', {
+            active: this.active - 1,
+            popup: true
+          })
+        }
+        // 发送请求 删除对应频道
+        await removeUserChannels(id)
+      } else {
+        // 非编辑状态 -> 切换频道(父元素 activeTab)
+        this.$emit('switchTab', {
+          active: index
+        })
+      }
     }
   },
   mounted () {
