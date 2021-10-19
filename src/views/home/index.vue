@@ -2,7 +2,7 @@
   <div class="page-container">
     <!-- 导航头部 -->
     <van-nav-bar class="nav-bar">
-      <div class="nav-search-bar" slot="title">
+      <div class="nav-search-bar" slot="title" @click="$router.push('/search')">
         <i class="iconfont icon-sousuo"></i> <span>搜索</span>
       </div>
     </van-nav-bar>
@@ -32,6 +32,8 @@
 import { getUserChannels } from '@/api/channels'
 import articleList from './components/article-list.vue'
 import ChannelEdit from './components/channel-edit.vue'
+import { mapGetters } from 'vuex'
+import { getItem } from '@/utils/storage'
 
 export default {
   components: { articleList, ChannelEdit },
@@ -43,9 +45,28 @@ export default {
       setChannelPopup: false // 自定义频道弹窗
     }
   },
+  computed: {
+    ...mapGetters(['isLogin'])
+  },
   methods: {
     async getUserChannels () {
-      const { channels } = await getUserChannels()
+      let channels
+      // 判断是否登录
+      if (this.isLogin) {
+        // 登录  调用接口
+        const data = await getUserChannels()
+        channels = data.channels
+      } else {
+        // 未登录 获取本地数据
+        channels = getItem('TOUTIAO_MY_CHANNELS')
+        // 判断本地是否有数据
+        if (!channels) {
+          // 无数据 拉取默认频道
+          const data = await getUserChannels()
+          channels = data.channels
+        }
+      }
+      // 渲染到 channels
       this.channels = channels
     },
     switchTab ({ active, popup = false }) {

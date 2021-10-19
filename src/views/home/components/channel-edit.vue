@@ -39,6 +39,8 @@
 
 <script>
 import { getAllChannels, addUserChannels, removeUserChannels } from '@/api/channels'
+import { mapGetters } from 'vuex'
+import { setItem } from '@/utils/storage'
 
 export default {
   name: 'channel-edit',
@@ -67,6 +69,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['isLogin']),
     recommendChannels () {
       // 从所有频道中筛选出与用户频道 不同的值
       // 推荐的频道【用户未设置的频道】 = 所有的频道 - 用户的频道
@@ -91,12 +94,19 @@ export default {
       this.myChannels.push(item)
       // 2. 删除推荐频道中的对应频道【计算属性会自动计算】
       // 3. 发送请求 将频道添加到服务器中
-      await addUserChannels({
-        channels: [{
-          id: item.id, // 频道的ID
-          seq: this.myChannels.length // 添加的序号
-        }]
-      })
+      // 用户是否登录
+      if (this.isLogin) {
+        // 已登录
+        await addUserChannels({
+          channels: [{
+            id: item.id, // 频道的ID
+            seq: this.myChannels.length // 添加的序号
+          }]
+        })
+      } else {
+        // 将myChannels保存在本地中
+        setItem('TOUTIAO_MY_CHANNELS', this.myChannels)
+      }
     },
     // 点击频道
     async handlerChannel (index, id) {
@@ -110,8 +120,12 @@ export default {
             popup: true
           })
         }
-        // 发送请求 删除对应频道
-        await removeUserChannels(id)
+        if (this.isLogin) {
+          // 发送请求 删除对应频道
+          await removeUserChannels(id)
+        } else {
+          setItem('TOUTIAO_MY_CHANNELS', this.myChannels)
+        }
       } else {
         // 非编辑状态 -> 切换频道(父元素 activeTab)
         this.$emit('switchTab', {

@@ -42,7 +42,6 @@ service.interceptors.response.use(
   async err => {
     // 获取响应失败的信息
     const res = err.response
-    console.log(res)
     // 判断状态码是否为401
     if (res.status === 401) {
       const token = store.state.user.token
