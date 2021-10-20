@@ -7,35 +7,52 @@
       finished-text="没有更多了"
       @load="fetchData"
     >
-       <van-cell v-for="(item, i) in list" :key="i" :title="item"/>
+       <van-cell v-for="(item, i) in list" :key="i" :title="item.title"/>
     </van-list>
   </div>
 </template>
 
 <script>
+import { getSearchResult } from '@/api/search'
+
 // 什么情况下触发搜素？ 按下回车、点击搜索关键字
 export default {
   name: 'search-result',
+  props: {
+    // 搜索关键字
+    kw: {
+      type: String,
+      required: true
+    }
+  },
   data () {
     return {
       loading: false, // 加载状态
       finished: false, // 是否能加载
-      list: [] // 数据列表
+      list: [], // 数据列表
+      page: 1 // 页码
     }
   },
   methods: {
-    fetchData () {
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(i)
-        }
-        // 关闭加载状态
-        this.loading = false
-        // 判断数据是否加载完成
-        if (this.list.length >= 50) {
-          this.finished = true
-        }
-      }, 1500)
+    async fetchData () {
+      // 调用接口 获取搜索结果
+      const { page, results } = await getSearchResult({
+        page: this.page,
+        per_page: 20,
+        q: this.kw
+      })
+      // console.log(page, per_page, results)
+      // 追加到数组中
+      this.list.push(...results)
+      // 页码 + 1
+      this.page = page + 1
+      // 关闭加载状态
+      this.loading = false
+      // 判断是否数据
+      if (results.length <= 0) {
+        // 关闭加载
+        this.finished = true
+      }
     }
   }
 }
