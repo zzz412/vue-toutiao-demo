@@ -13,6 +13,7 @@
 </template>
 
 <script>
+// 什么情况下触发搜素？ 按下回车、点击搜索关键字
 export default {
   name: 'search-result',
   data () {

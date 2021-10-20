@@ -16,7 +16,7 @@
     <!-- 搜索历史  文本框没有值显示-->
     <search-history v-if="!kw"></search-history>
     <!-- 搜索建议  文本框有值显示-->
-    <search-suggestion v-if="kw && !showResult"></search-suggestion>
+    <search-suggestion v-if="kw && !showResult" :kw="kw" @search="searchSuggestion"></search-suggestion>
     <!-- 搜索结果  按下回车时显示-->
     <search-result v-if="showResult"></search-result>
   </div>
@@ -45,6 +45,10 @@ export default {
     onCancel () {
       // 跳转到首页
       this.$router.push('/')
+    },
+    searchSuggestion (v) {
+      console.log(v)
+      this.onSearch()
     }
   }
 }
