@@ -12,7 +12,7 @@
     <!-- 历史列表 -->
     <div class="history-list">
       <van-cell :title="item" v-for="(item, i) in list" :key="i" @click="$emit('search', item)">
-        <van-icon name="close" v-if="isDelete" @click="removeHistory(i)"/>
+        <van-icon name="close" v-if="isDelete" @click.stop="removeHistory(i)"/>
       </van-cell>
     </div>
   </div>

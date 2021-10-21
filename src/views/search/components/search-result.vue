@@ -7,17 +7,19 @@
       finished-text="没有更多了"
       @load="fetchData"
     >
-       <van-cell v-for="(item, i) in list" :key="i" :title="item.title"/>
+      <ArticleItem  v-for="(item, i) in list" :key="i" :article="item" class="result-item"/>
     </van-list>
   </div>
 </template>
 
 <script>
 import { getSearchResult } from '@/api/search'
+import ArticleItem from '@/components/article-item'
 
 // 什么情况下触发搜素？ 按下回车、点击搜索关键字
 export default {
   name: 'search-result',
+  components: { ArticleItem },
   props: {
     // 搜索关键字
     kw: {
@@ -59,5 +61,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.search-result {
+  .result-item {
+    margin-bottom: 12px;
+  }
+}
 </style>
