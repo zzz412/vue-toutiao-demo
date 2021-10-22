@@ -24,3 +24,22 @@ export function userInfo () {
     url: 'user'
   })
 }
+
+// 关注用户
+export function followUser (id) {
+  return request({
+    method: 'post',
+    url: 'user/followings',
+    data: {
+      target: id
+    }
+  })
+}
+
+// 取消关注用户
+export function unFollowUser (id) {
+  return request({
+    method: 'delete',
+    url: `user/followings/${id}`
+  })
+}
