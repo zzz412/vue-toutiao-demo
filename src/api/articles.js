@@ -9,3 +9,11 @@ export function articleList (params) {
     params
   })
 }
+
+// 获取文章详情
+export function articleInfo (id) {
+  return request({
+    method: 'get',
+    url: `articles/${id}`
+  })
+}
