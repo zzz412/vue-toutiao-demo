@@ -23,14 +23,16 @@
           <FollowUser v-model="article.is_followed" :authorId="article.aut_id"></FollowUser>
         </van-cell>
         <!-- 文章内容 -->
-        <div class="article-content markdown-body" v-html="article.content"></div>
+        <div ref="contentRef" class="article-content markdown-body" v-html="article.content"></div>
         <!-- 分割线 -->
         <van-divider>正文结束</van-divider>
+        <!-- 评论列表 -->
+        <comment-list :source="articleId"></comment-list>
       </div>
       <!-- 底部导航 -->
       <div class="bottom-bar">
         <!-- 写评论 -->
-        <van-button round class="comment-btn">写评论</van-button>
+        <van-button round class="comment-btn" @click="postShow = true">写评论</van-button>
         <!-- 评论数量 -->
         <van-icon name="comment-o" badge="99" class="comment-count"/>
         <!-- 收藏 -->
@@ -40,6 +42,10 @@
         <!-- 分享 -->
         <van-button icon="share-o" class="btn-item" size="small"></van-button>
       </div>
+      <!-- 评论输入框弹出层 -->
+      <van-popup v-model="postShow" position="bottom">
+        <CommentPost></CommentPost>
+      </van-popup>
     </template>
     <!-- 文章找不到 -->
     <div class="error-wrap" v-else-if="notFound">
@@ -58,10 +64,13 @@
 <script>
 import { articleInfo } from '@/api/articles'
 import FollowUser from './components/follow-user'
+import CommentList from './components/comment-list'
+import CommentPost from './components/comment-post'
+import { ImagePreview } from 'vant'
 
 export default {
   name: 'article-index',
-  components: { FollowUser },
+  components: { FollowUser, CommentPost, CommentList },
   props: {
     // 动态路由参数
     articleId: [String, Number]
@@ -73,7 +82,8 @@ export default {
       // 是否加载中
       loading: true,
       // 资源找不到
-      notFound: false
+      notFound: false,
+      postShow: false
     }
   },
   methods: {
@@ -92,6 +102,27 @@ export default {
         }
       }
       this.loading = false
+      // 异步去加载预览图
+      this.$nextTick(() => {
+        this.loadPreView()
+      })
+    },
+    // 加载预览图
+    loadPreView () {
+      // 1. 获取所有图片
+      const imgs = this.$refs.contentRef.querySelectorAll('img')
+      // 将所有图片的src地址保存
+      const images = [...imgs].map(img => img.src)
+      // 2. 给图片绑定点击事件
+      imgs.forEach((img, i) => {
+        img.onclick = function () {
+          // 显示图片预览
+          ImagePreview({
+            images, // 图片列表
+            startPosition: i
+          })
+        }
+      })
     }
   },
   mounted () {
@@ -121,11 +152,10 @@ export default {
   }
   .main-wrap {
     box-sizing: border-box;
-    padding: 0 32px;
     margin-top: 92px;
     margin-bottom: 88px;
     .artilce-title {
-      padding: 48px 0 59px;
+      padding: 48px 32px 59px;
       margin-top: 96px;
       color: #3A3A3A;
       font-size: 40px;
@@ -134,8 +164,8 @@ export default {
     .author-info {
       display: flex;
       align-items: center;
-      padding: 0;
       margin-bottom: 60px;
+      padding: 0 32px;
       .author-avatar {
         width: 70px;
         height: 70px;
@@ -150,6 +180,7 @@ export default {
       }
     }
     .article-content {
+      padding: 0 32px;
       font-size: 32px;
       // 文章详情的样式 使用MD文档撰写的
       // 只需要下载指定的MD css即可
