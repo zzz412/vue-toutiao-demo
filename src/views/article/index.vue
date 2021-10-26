@@ -27,14 +27,14 @@
         <!-- 分割线 -->
         <van-divider>正文结束</van-divider>
         <!-- 评论列表 -->
-        <comment-list :source="articleId"></comment-list>
+        <comment-list :source="articleId" @count="setCount"></comment-list>
       </div>
       <!-- 底部导航 -->
       <div class="bottom-bar">
         <!-- 写评论 -->
         <van-button round class="comment-btn" @click="postShow = true">写评论</van-button>
         <!-- 评论数量 -->
-        <van-icon name="comment-o" badge="99" class="comment-count"/>
+        <van-icon name="comment-o" :badge="commentCount" class="comment-count"/>
         <!-- 收藏 -->
         <van-button icon="star-o" class="btn-item" size="small"></van-button>
         <!-- 点赞 -->
@@ -83,7 +83,8 @@ export default {
       loading: true,
       // 资源找不到
       notFound: false,
-      postShow: false
+      postShow: false,
+      commentCount: 0
     }
   },
   methods: {
@@ -123,6 +124,10 @@ export default {
           })
         }
       })
+    },
+    // 设置评论数量
+    setCount (count) {
+      this.commentCount = count
     }
   },
   mounted () {
