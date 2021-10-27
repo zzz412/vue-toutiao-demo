@@ -28,3 +28,12 @@ export function commentUnLike (target) {
     url: `comment/likings/${target}`
   })
 }
+
+// 获取评论或评论回复
+export function sendComment (data) {
+  return request({
+    method: 'post',
+    url: 'comments',
+    data
+  })
+}

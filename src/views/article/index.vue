@@ -27,7 +27,7 @@
         <!-- 分割线 -->
         <van-divider>正文结束</van-divider>
         <!-- 评论列表 -->
-        <comment-list :source="articleId" @count="setCount"></comment-list>
+        <comment-list ref="commentListRef" :source="articleId" @count="setCount" @reply="onReply"></comment-list>
       </div>
       <!-- 底部导航 -->
       <div class="bottom-bar">
@@ -44,7 +44,7 @@
       </div>
       <!-- 评论输入框弹出层 -->
       <van-popup v-model="postShow" position="bottom">
-        <CommentPost></CommentPost>
+        <CommentPost :articleId="articleId" @post="addComment"></CommentPost>
       </van-popup>
     </template>
     <!-- 文章找不到 -->
@@ -58,6 +58,10 @@
       <p class="text">资源加载错误 !</p>
       <van-button type="default" class="reload-btn" @click="loadArticle">点击重试</van-button>
     </div>
+    <!-- 文章回复弹窗 -->
+    <van-popup v-model="replyShow" style="height: 100%;" position="bottom">
+      <comment-reply @close="replyShow = false"></comment-reply>
+    </van-popup>
   </div>
 </template>
 
@@ -66,11 +70,12 @@ import { articleInfo } from '@/api/articles'
 import FollowUser from './components/follow-user'
 import CommentList from './components/comment-list'
 import CommentPost from './components/comment-post'
+import CommentReply from './components/comment-reply'
 import { ImagePreview } from 'vant'
 
 export default {
   name: 'article-index',
-  components: { FollowUser, CommentPost, CommentList },
+  components: { FollowUser, CommentPost, CommentList, CommentReply },
   props: {
     // 动态路由参数
     articleId: [String, Number]
@@ -84,6 +89,7 @@ export default {
       // 资源找不到
       notFound: false,
       postShow: false,
+      replyShow: false,
       commentCount: 0
     }
   },
@@ -128,6 +134,21 @@ export default {
     // 设置评论数量
     setCount (count) {
       this.commentCount = count
+    },
+    // 添加评论
+    addComment (obj) {
+      // 将评论添加到 评论列表
+      this.$refs.commentListRef.list.unshift(obj)
+      // 关闭弹出层
+      this.postShow = false
+      // 评论数量+1
+      this.commentCount++
+    },
+    // 进行回复
+    onReply () {
+      // 显示回复弹出层
+      this.replyShow = true
+      console.log('进行回复')
     }
   },
   mounted () {

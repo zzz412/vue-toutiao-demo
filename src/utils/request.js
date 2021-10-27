@@ -15,7 +15,8 @@ import { setToken } from '@/utils/storage'
 
 // 创建axios实例
 const service = Axios.create({
-  baseURL: 'http://toutiao.zeng.pub/v1_0/' // 接口跟路径
+  // baseURL: 'http://toutiao.zeng.pub/v1_0/' // 接口跟路径
+  baseURL: '/api/' // 接口跟路径
 })
 // 定义统一请求拦截器
 service.interceptors.request.use(

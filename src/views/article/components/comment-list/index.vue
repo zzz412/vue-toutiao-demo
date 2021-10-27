@@ -2,7 +2,7 @@
   <!-- 评论列表 -->
   <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
      <!-- 评论项 -->
-     <CommentItem v-for="(item, index) in list" :key="index" :comment="item"/>
+     <CommentItem v-for="(item, index) in list" :key="index" :comment="item" @reply="onReply"/>
   </van-list>
 </template>
 
@@ -33,7 +33,7 @@ export default {
         type: 'a', // 查询的类型 a 查文章评论 c 查评论回复
         source: this.source, // 查询的ID （a 文章id  c 评论id）
         offset: this.offset, // 文章偏移量 （分页 第一页为null  后续穿对应ID即可）
-        limit: 5 // 每次查询的条数
+        limit: 10 // 每次查询的条数
       })
       // 将查询的数据追加在list中
       this.list.push(...results)
@@ -50,6 +50,9 @@ export default {
         // eslint-disable-next-line camelcase
         this.offset = last_id
       }
+    },
+    onReply () {
+      this.$emit('reply')
     }
   },
   mounted () {
