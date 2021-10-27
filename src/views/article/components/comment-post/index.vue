@@ -21,9 +21,12 @@ import { sendComment } from '@/api/comment'
 export default {
   name: 'comment-post',
   props: {
-    articleId: {
+    target: {
       type: [String, Number, Object],
       required: true
+    },
+    articleId: {
+      type: [String, Number, Object]
     }
   },
   data () {
@@ -42,9 +45,9 @@ export default {
       try {
         // 发送网络请求 发表评论
         const { new_obj } = await sendComment({
-          target: this.articleId, // 对文章评论则是文章ID  对评论回复则是评论ID
+          target: this.target, // 对文章评论则是文章ID  对评论回复则是评论ID
           content: this.content, // 评论内容
-          art_id: null // 对文章评论则为null  对评论回复则是文章ID
+          art_id: this.articleId ? this.articleId : null // 对文章评论则为null  对评论回复则是文章ID
         })
         // 将返回的评论对象 添加到评论列表中list
         this.$emit('post', new_obj)

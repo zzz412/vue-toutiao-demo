@@ -44,7 +44,7 @@
       </div>
       <!-- 评论输入框弹出层 -->
       <van-popup v-model="postShow" position="bottom">
-        <CommentPost :articleId="articleId" @post="addComment"></CommentPost>
+        <CommentPost :target="articleId" @post="addComment"></CommentPost>
       </van-popup>
     </template>
     <!-- 文章找不到 -->
@@ -60,7 +60,8 @@
     </div>
     <!-- 文章回复弹窗 -->
     <van-popup v-model="replyShow" style="height: 100%;" position="bottom">
-      <comment-reply @close="replyShow = false"></comment-reply>
+      <!-- 通过v-if 控制回复组件的 销毁和创建 -->
+      <comment-reply @post="setCount" v-if="replyShow" @close="replyShow = false" :comment="activeComment" :articleId="articleId"></comment-reply>
     </van-popup>
   </div>
 </template>
@@ -88,9 +89,14 @@ export default {
       loading: true,
       // 资源找不到
       notFound: false,
+      // 评论弹出层
       postShow: false,
+      // 回复弹出层
       replyShow: false,
-      commentCount: 0
+      // 评论数量
+      commentCount: 0,
+      // 当前回复的评论
+      activeComment: {}
     }
   },
   methods: {
@@ -132,7 +138,11 @@ export default {
       })
     },
     // 设置评论数量
-    setCount (count) {
+    setCount (count, isRp) {
+      // 判断是否为发布回复
+      if (isRp) {
+        return this.commentCount++
+      }
       this.commentCount = count
     },
     // 添加评论
@@ -145,10 +155,10 @@ export default {
       this.commentCount++
     },
     // 进行回复
-    onReply () {
+    onReply (comment) {
       // 显示回复弹出层
       this.replyShow = true
-      console.log('进行回复')
+      this.activeComment = comment
     }
   },
   mounted () {

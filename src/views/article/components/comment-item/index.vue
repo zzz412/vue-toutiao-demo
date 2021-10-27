@@ -26,7 +26,7 @@
       <!-- 底部信息 -->
       <div class="bottom">
         <span class="time">{{comment.pubdate | relativeTime}}</span>
-        <van-button class="rp-btn" round @click="$emit('reply')">回复 {{comment.reply_count}}</van-button>
+        <van-button class="rp-btn" round @click="$emit('reply', comment)">回复 {{comment.reply_count}}</van-button>
       </div>
     </div>
   </van-cell>
