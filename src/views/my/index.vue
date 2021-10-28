@@ -12,7 +12,7 @@
       <div class="info1">
         <img :src="userInfo.photo" alt="">
         <span class="username">{{userInfo.name}}</span>
-        <van-button type="default" class="edit-info-btn" size="mini" round>编辑资料</van-button>
+        <van-button type="default" class="edit-info-btn" size="mini" round @click="$router.push('/user')">编辑资料</van-button>
       </div>
       <!-- 资料区域 -->
       <div class="info2">

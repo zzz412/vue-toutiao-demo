@@ -43,3 +43,11 @@ export function unFollowUser (id) {
     url: `user/followings/${id}`
   })
 }
+
+// 获取用户个人资料
+export function userProFile () {
+  return request({
+    method: 'get',
+    url: 'user/profile'
+  })
+}

@@ -1,7 +1,7 @@
 <template>
   <div class="article-container">
     <!-- 导航 -->
-    <van-nav-bar  left-arrow class="nav-bar" title="文章详情" @click-left="$router.back()"/>
+    <van-nav-bar left-arrow class="nav-bar" title="文章详情" @click-left="$router.back()"/>
     <!-- 加载中 -->
     <div class="loading-wrap" v-if="loading">
       <van-loading type="circular" vertical color="#0094ff" text-color="#0094ff">

@@ -31,6 +31,11 @@ const routes = [
     component: () => import('@/views/article'),
     // 将动态路由的参数 传到组件的props中
     props: true
+  },
+  { // 用户信息修改
+    path: '/user',
+    name: 'user',
+    component: () => import('@/views/user')
   }
 ]
 
