@@ -51,3 +51,21 @@ export function userProFile () {
     url: 'user/profile'
   })
 }
+
+// 上传用户头像
+export function uploadUserPhoto (data) {
+  return request({
+    method: 'patch',
+    url: 'user/photo',
+    data
+  })
+}
+
+// 修改用户资料
+export function updateUserInfo (data) {
+  return request({
+    method: 'patch',
+    url: 'user/profile',
+    data
+  })
+}

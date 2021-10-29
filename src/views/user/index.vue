@@ -13,13 +13,22 @@
       <!-- 昵称 -->
       <van-cell title="昵称" is-link :value="info.name"></van-cell>
       <!-- 性别 -->
-      <van-cell title="性别" is-link :value="info.gender ? '女' : '男'"></van-cell>
+      <van-cell title="性别" is-link :value="info.gender ? '女' : '男'" @click="is_update_gender = true"></van-cell>
       <!-- 生日 -->
-      <van-cell title="生日" is-link :value="info.birthday"></van-cell>
+      <van-cell title="生日" is-link :value="info.birthday" @click="is_update_birthday = true"></van-cell>
     </van-cell-group>
     <!-- 更改头像 弹出层 -->
     <van-popup v-model="is_update_photo" position="bottom" style="height: 100%;">
-      <update-photo @close="is_update_photo = false" :img="img"></update-photo>
+      <!-- $event为事件传递出来的参数 -->
+      <update-photo v-if="is_update_photo" @close="is_update_photo = false" :img="img" @confirm="info.photo = $event"></update-photo>
+    </van-popup>
+    <!-- 修改性别 弹出层 -->
+    <van-popup v-model="is_update_gender" position="bottom">
+      <update-gender v-model="info.gender" @close="is_update_gender = false"></update-gender>
+    </van-popup>
+    <!-- 修改生日 弹出层 -->
+    <van-popup v-model="is_update_birthday" position="bottom">
+      <update-birthday v-model="info.birthday" @close="is_update_birthday = false"></update-birthday>
     </van-popup>
   </div>
 </template>
@@ -27,15 +36,19 @@
 <script>
 import { userProFile } from '@/api/user'
 import UpdatePhoto from './components/update-photo'
+import UpdateGender from './components/update-gender'
+import UpdateBirthday from './components/update-birthday'
 
 export default {
   name: 'user-index',
-  components: { UpdatePhoto },
+  components: { UpdatePhoto, UpdateGender, UpdateBirthday },
   data () {
     return {
       info: {},
       img: '',
-      is_update_photo: false
+      is_update_photo: false,
+      is_update_gender: false,
+      is_update_birthday: false
     }
   },
   methods: {
